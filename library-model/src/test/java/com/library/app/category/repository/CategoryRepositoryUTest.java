@@ -113,4 +113,20 @@ public class CategoryRepositoryUTest {
         assertThat(categoryRepository.alreadyExists(cleanCode()), is(equalTo(false)));
     }
 
+    @Test
+    public void alreadyExistsCategoryWithId() {
+        final Category java = dBCommandTransactionalExecutor.executeCommand(() -> {
+            categoryRepository.add(cleanCode());
+            return categoryRepository.add(java());
+        });
+
+        assertThat(categoryRepository.alreadyExists(java), is(equalTo(false)));
+
+        java.setName(cleanCode().getName());
+        assertThat(categoryRepository.alreadyExists(java), is(equalTo(true)));
+
+        java.setName(networks().getName());
+        assertThat(categoryRepository.alreadyExists(java), is(equalTo(false)));
+    }
+
 }
