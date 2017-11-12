@@ -1,6 +1,7 @@
 package com.library.app.category.services.impl;
 
 import com.library.app.category.exception.CategoryExistentException;
+import com.library.app.category.exception.CategoryNotFoundException;
 import com.library.app.category.model.Category;
 import com.library.app.category.repository.CategoryRepository;
 import com.library.app.category.services.CategoryServices;
@@ -82,6 +83,14 @@ public class CategoryServicesUTest {
     @Test(expected = CategoryExistentException.class)
     public void updateCategoryWithExistentName() {
         when(categoryRepository.alreadyExists(categoryWithId(java(), 1L))).thenReturn(true);
+
+        categoryServices.update(categoryWithId(java(), 1L));
+    }
+
+    @Test(expected = CategoryNotFoundException.class)
+    public void updateCategoryNotFound() {
+        when(categoryRepository.alreadyExists(categoryWithId(java(), 1L))).thenReturn(false);
+        when(categoryRepository.existsById(1L)).thenReturn(false);
 
         categoryServices.update(categoryWithId(java(), 1L));
     }
