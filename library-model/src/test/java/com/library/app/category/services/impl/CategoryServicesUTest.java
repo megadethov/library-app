@@ -72,4 +72,13 @@ public class CategoryServicesUTest {
             assertThat(e.getFieldName(), is(equalTo("name")));
         }
     }
+
+    private void updateCategoryWithInvalidName(final String name) {
+        try {
+            categoryServices.update(new Category(name));
+            fail("An error should have been thrown");
+        } catch (final FieldNotValidException e) {
+            assertThat(e.getFieldName(), is(equalTo("name")));
+        }
+    }
 }

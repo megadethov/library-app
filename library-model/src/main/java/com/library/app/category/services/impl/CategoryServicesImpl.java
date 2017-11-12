@@ -30,4 +30,9 @@ public class CategoryServicesImpl implements CategoryServices {
 
         return categoryRepository.add(category);
     }
+
+    @Override
+    public void update(final Category category) {
+        // TODO: 12.11.17  
+    }
 }
