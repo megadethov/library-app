@@ -27,9 +27,13 @@ public class CategoryServicesUTest {
 
     @Test
     public void addCategoryWithNullName() {
+        addCategoryWithInvalidName(null);
+    }
+
+    private void addCategoryWithInvalidName(final String name) {
         try {
-            categoryServices.add(new Category());
-            fail("An error should have bean thrown");
+            categoryServices.add(new Category(name));
+            fail("An error should have been thrown");
         } catch (final FieldNotValidException e) {
             assertThat(e.getFieldName(), is(equalTo("name")));
         }
