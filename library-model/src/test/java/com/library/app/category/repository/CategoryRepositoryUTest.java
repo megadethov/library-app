@@ -43,11 +43,8 @@ public class CategoryRepositoryUTest {
 
     @Test
     public void addCategoryAndFindIt() {
-        Long categoryAddedId = dbCommandTransactionalExecutor.executeCommand(new DBCommand<Long>() {
-            @Override
-            public Long execute() {
+        Long categoryAddedId = dbCommandTransactionalExecutor.executeCommand(() -> {
                 return categoryRepository.add(java()).getId();
-            }
         });
 
         assertThat(categoryAddedId, is(notNullValue()));
