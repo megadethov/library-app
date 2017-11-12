@@ -64,6 +64,16 @@ public class CategoryServicesUTest {
         assertThat(categoryAdded.getId(), is(equalTo(1L)));
     }
 
+    @Test
+    public void updateWithNullName() {
+        updateCategoryWithInvalidName(null);
+    }
+
+    @Test
+    public void updateCategoryWithShortName() {
+        updateCategoryWithInvalidName("A");
+    }
+
     private void addCategoryWithInvalidName(final String name) {
         try {
             categoryServices.add(new Category(name));

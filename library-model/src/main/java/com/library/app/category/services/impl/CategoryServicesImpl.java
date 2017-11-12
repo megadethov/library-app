@@ -33,6 +33,11 @@ public class CategoryServicesImpl implements CategoryServices {
 
     @Override
     public void update(final Category category) {
-        // TODO: 12.11.17  
+        final Set<ConstraintViolation<Category>> errors = validator.validate(category);
+        final Iterator<ConstraintViolation<Category>> itErrors = errors.iterator();
+        if (itErrors.hasNext()) {
+            final ConstraintViolation<Category> violation = itErrors.next();
+            throw new FieldNotValidException(violation.getPropertyPath().toString(), violation.getMessage());
+        }
     }
 }
