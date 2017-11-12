@@ -12,6 +12,9 @@ import org.junit.Test;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.library.app.commontests.category.CategoryForTestsRepository.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -122,6 +125,14 @@ public class CategoryServicesUTest {
         when(categoryRepository.findById(1L)).thenReturn(null);
 
         categoryServices.findById(1L);
+    }
+
+    @Test
+    public void findAllNoCategories() {
+        when(categoryRepository.findAll("name")).thenReturn(new ArrayList<>());
+
+        final List<Category> categories = categoryServices.findAll();
+        assertThat(categories.isEmpty(), is(equalTo(true)));
     }
 
     private void addCategoryWithInvalidName(final String name) {

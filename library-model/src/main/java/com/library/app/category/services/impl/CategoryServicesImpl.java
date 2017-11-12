@@ -10,6 +10,7 @@ import com.library.app.common.exception.FieldNotValidException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class CategoryServicesImpl implements CategoryServices {
@@ -56,5 +57,10 @@ public class CategoryServicesImpl implements CategoryServices {
             throw new CategoryNotFoundException();
         }
         return category;
+    }
+
+    @Override
+    public List<Category> findAll() {
+        return categoryRepository.findAll("name");
     }
 }
