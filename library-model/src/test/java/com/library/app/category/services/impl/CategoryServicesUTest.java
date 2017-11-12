@@ -1,6 +1,8 @@
 package com.library.app.category.services.impl;
 
+import com.library.app.category.exception.CategoryExistentException;
 import com.library.app.category.model.Category;
+import com.library.app.category.repository.CategoryRepository;
 import com.library.app.category.services.CategoryServices;
 import com.library.app.common.exception.FieldNotValidException;
 import org.junit.Before;
@@ -9,20 +11,26 @@ import org.junit.Test;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import static com.library.app.commontests.category.CategoryForTestsRepository.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CategoryServicesUTest {
     private CategoryServices categoryServices;
+    private CategoryRepository categoryRepository;
     private Validator validator;
 
 
     @Before
     public void initTestCase() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
+        categoryRepository = mock(CategoryRepository.class);
         categoryServices = new CategoryServicesImpl();
         ((CategoryServicesImpl) categoryServices).validator = validator;
+        ((CategoryServicesImpl) categoryServices).categoryRepository = categoryRepository;
     }
 
     @Test
@@ -33,6 +41,18 @@ public class CategoryServicesUTest {
     @Test
     public void addCategoryWithShortName() {
         addCategoryWithInvalidName("A");
+    }
+
+    @Test
+    public void addCategoryWithLongName() {
+        addCategoryWithInvalidName("This is a long name that will cause an exception to be thrown");
+    }
+
+    @Test(expected = CategoryExistentException.class)
+    public void addCategoryWithExistentName() {
+        when(categoryRepository.alreadyExists(java())).thenReturn(true);
+
+        categoryServices.add(java());
     }
 
     private void addCategoryWithInvalidName(final String name) {
