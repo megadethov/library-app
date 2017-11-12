@@ -13,6 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.library.app.commontests.category.CategoryForTestsRepository.*;
@@ -133,6 +134,17 @@ public class CategoryServicesUTest {
 
         final List<Category> categories = categoryServices.findAll();
         assertThat(categories.isEmpty(), is(equalTo(true)));
+    }
+
+    @Test
+    public void findAllCategories() {
+        when(categoryRepository.findAll("name")).thenReturn(
+                Arrays.asList(categoryWithId(java(), 1L), categoryWithId(networks(), 2L)));
+
+        final List<Category> categories = categoryServices.findAll();
+        assertThat(categories.size(), is(equalTo(2)));
+        assertThat(categories.get(0).getName(), is(equalTo(java().getName())));
+        assertThat(categories.get(1).getName(), is(equalTo(networks().getName())));
     }
 
     private void addCategoryWithInvalidName(final String name) {
