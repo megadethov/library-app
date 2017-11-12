@@ -59,4 +59,10 @@ public class CategoryRepositoryUTest {
         final Category category = categoryRepository.findById(999L);
         assertThat(category, is(nullValue()));
     }
+
+    @Test
+    public void findCategoryByIdWithNullId() {
+        final Category category = categoryRepository.findById(null);
+        assertThat(category, is(nullValue()));
+    }
 }
