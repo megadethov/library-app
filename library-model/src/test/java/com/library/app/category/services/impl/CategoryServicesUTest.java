@@ -13,6 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import static com.library.app.commontests.category.CategoryForTestsRepository.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
@@ -104,6 +105,16 @@ public class CategoryServicesUTest {
         categoryServices.update(categoryWithId(java(), 1L));
 
         verify(categoryRepository).update(categoryWithId(java(), 1L));
+    }
+
+    @Test
+    public void findCategoryById() {
+        when(categoryRepository.findById(1L)).thenReturn(categoryWithId(java(), 1L));
+
+        final Category category = categoryServices.findById(1L);
+        assertThat(category, is(notNullValue()));
+        assertThat(category.getId(), is(equalTo(1L)));
+        assertThat(category.getName(), is(equalTo(java().getName())));
     }
 
     private void addCategoryWithInvalidName(final String name) {
