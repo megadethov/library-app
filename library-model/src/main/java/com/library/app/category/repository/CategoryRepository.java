@@ -19,4 +19,8 @@ public class CategoryRepository {
         }
         return em.find(Category.class, id);
     }
+
+    public void update(final Category category) {
+        em.merge(category);
+    }
 }

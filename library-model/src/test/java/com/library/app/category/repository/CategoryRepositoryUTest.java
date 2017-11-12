@@ -22,7 +22,7 @@ public class CategoryRepositoryUTest {
     private EntityManagerFactory emf;
     private EntityManager em;
     private CategoryRepository categoryRepository;
-    private DBCommandTransactionalExecutor dbCommandTransactionalExecutor;
+    private DBCommandTransactionalExecutor dBCommandTransactionalExecutor;
 
     @Before
     public void initTestCase() {
@@ -32,7 +32,7 @@ public class CategoryRepositoryUTest {
         categoryRepository = new CategoryRepository();
         categoryRepository.em = em;
 
-        dbCommandTransactionalExecutor = new DBCommandTransactionalExecutor(em);
+        dBCommandTransactionalExecutor = new DBCommandTransactionalExecutor(em);
     }
 
     @After
@@ -43,7 +43,7 @@ public class CategoryRepositoryUTest {
 
     @Test
     public void addCategoryAndFindIt() {
-        Long categoryAddedId = dbCommandTransactionalExecutor.executeCommand(() -> {
+        Long categoryAddedId = dBCommandTransactionalExecutor.executeCommand(() -> {
                 return categoryRepository.add(java()).getId();
         });
 
@@ -64,5 +64,24 @@ public class CategoryRepositoryUTest {
     public void findCategoryByIdWithNullId() {
         final Category category = categoryRepository.findById(null);
         assertThat(category, is(nullValue()));
+    }
+
+    @Test
+    public void updateCategory() {
+        final Long categoryAddedId = dBCommandTransactionalExecutor.executeCommand(() -> {
+            return categoryRepository.add(java()).getId();
+        });
+
+        final Category categoryAfterAdd = categoryRepository.findById(categoryAddedId);
+        assertThat(categoryAfterAdd.getName(), is(equalTo(java().getName())));
+
+        categoryAfterAdd.setName(cleanCode().getName());
+        dBCommandTransactionalExecutor.executeCommand(() -> {
+            categoryRepository.update(categoryAfterAdd);
+            return null;
+        });
+
+        final Category categoryAfterUpdate = categoryRepository.findById(categoryAddedId);
+        assertThat(categoryAfterUpdate.getName(), is(equalTo(cleanCode().getName())));
     }
 }
