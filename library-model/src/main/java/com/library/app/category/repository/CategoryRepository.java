@@ -1,6 +1,7 @@
 package com.library.app.category.repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.library.app.category.model.Category;
 
@@ -29,5 +30,21 @@ public class CategoryRepository {
     @SuppressWarnings("unchecked")
     public List<Category> findAll(final String orderField) {
         return em.createQuery("Select e From Category e Order by e." + orderField).getResultList();
+    }
+
+    public boolean alreadyExists(final Category category) {
+        final StringBuilder jpql = new StringBuilder();
+        jpql.append("Select 1 From Category e where e.name = :name");
+        if (category.getId() != null) {
+            jpql.append(" And e.id != :id");
+        }
+
+        final Query query = em.createQuery(jpql.toString());
+        query.setParameter("name", category.getName());
+        if (category.getId() != null) {
+            query.setParameter("id", category.getId());
+        }
+
+        return query.setMaxResults(1).getResultList().size() > 0;
     }
 }
