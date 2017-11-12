@@ -90,9 +90,7 @@ public class CategoryRepositoryUTest {
     @Test
     public void findAllCategories() {
         dBCommandTransactionalExecutor.executeCommand(() -> {
-            for (final Category category : allCategories()) {
-                categoryRepository.add(category);
-            }
+            allCategories().forEach(categoryRepository::add);
             return null;
         });
 
