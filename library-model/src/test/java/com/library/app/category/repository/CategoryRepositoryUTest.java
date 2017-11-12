@@ -1,10 +1,6 @@
 package com.library.app.category.repository;
 
-import static com.library.app.commontests.category.CategoryForTestsRepository.*;
-import static org.hamcrest.CoreMatchers.*;
-
 import com.library.app.category.model.Category;
-import com.library.app.commontests.utils.DBCommand;
 import com.library.app.commontests.utils.DBCommandTransactionalExecutor;
 import org.junit.After;
 import org.junit.Before;
@@ -13,11 +9,11 @@ import org.junit.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 import java.util.List;
 
+import static com.library.app.commontests.category.CategoryForTestsRepository.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 public class CategoryRepositoryUTest {
 
@@ -129,4 +125,13 @@ public class CategoryRepositoryUTest {
         assertThat(categoryRepository.alreadyExists(java), is(equalTo(false)));
     }
 
+    @Test
+    public void existsById() {
+        final Long categoryAddedId = dBCommandTransactionalExecutor.executeCommand(() -> {
+            return categoryRepository.add(java()).getId();
+        });
+
+        assertThat(categoryRepository.existsById(categoryAddedId), is(equalTo(true)));
+        assertThat(categoryRepository.existsById(999L), is(equalTo(false)));
+    }
 }

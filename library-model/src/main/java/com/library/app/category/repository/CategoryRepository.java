@@ -47,4 +47,11 @@ public class CategoryRepository {
 
         return query.setMaxResults(1).getResultList().size() > 0;
     }
+
+    public boolean existsById(final Long id) {
+        return em.createQuery("Select 1 From Category e where e.id = :id")
+                .setParameter("id", id)
+                .setMaxResults(1)
+                .getResultList().size() > 0;
+    }
 }
