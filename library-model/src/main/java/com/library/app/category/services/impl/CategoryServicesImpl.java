@@ -39,5 +39,8 @@ public class CategoryServicesImpl implements CategoryServices {
             final ConstraintViolation<Category> violation = itErrors.next();
             throw new FieldNotValidException(violation.getPropertyPath().toString(), violation.getMessage());
         }
+        if (categoryRepository.alreadyExists(category)) {
+            throw new CategoryExistentException();
+        }
     }
 }
