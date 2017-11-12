@@ -53,4 +53,10 @@ public class CategoryRepositoryUTest {
         assertThat(category, is(notNullValue()));
         assertThat(category.getName(), is(equalTo(java().getName())));
     }
+
+    @Test
+    public void findCategoryByIdNotFound() {
+        final Category category = categoryRepository.findById(999L);
+        assertThat(category, is(nullValue()));
+    }
 }
