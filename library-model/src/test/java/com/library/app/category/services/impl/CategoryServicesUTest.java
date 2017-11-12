@@ -74,6 +74,11 @@ public class CategoryServicesUTest {
         updateCategoryWithInvalidName("A");
     }
 
+    @Test
+    public void updateCategoryWithLongName() {
+        updateCategoryWithInvalidName("This is a long name that will cause an exception to be thrown");
+    }
+
     private void addCategoryWithInvalidName(final String name) {
         try {
             categoryServices.add(new Category(name));
