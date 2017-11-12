@@ -30,6 +30,11 @@ public class CategoryServicesUTest {
         addCategoryWithInvalidName(null);
     }
 
+    @Test
+    public void addCategoryWithShortName() {
+        addCategoryWithInvalidName("A");
+    }
+
     private void addCategoryWithInvalidName(final String name) {
         try {
             categoryServices.add(new Category(name));
