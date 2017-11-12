@@ -46,5 +46,6 @@ public class CategoryServicesImpl implements CategoryServices {
         if (!categoryRepository.existsById(category.getId())) {
             throw new CategoryNotFoundException();
         }
+        categoryRepository.update(category);
     }
 }

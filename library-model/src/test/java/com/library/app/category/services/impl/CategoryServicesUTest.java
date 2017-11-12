@@ -17,6 +17,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CategoryServicesUTest {
@@ -93,6 +94,16 @@ public class CategoryServicesUTest {
         when(categoryRepository.existsById(1L)).thenReturn(false);
 
         categoryServices.update(categoryWithId(java(), 1L));
+    }
+
+    @Test
+    public void updateValidCategory() {
+        when(categoryRepository.alreadyExists(categoryWithId(java(), 1L))).thenReturn(false);
+        when(categoryRepository.existsById(1L)).thenReturn(true);
+
+        categoryServices.update(categoryWithId(java(), 1L));
+
+        verify(categoryRepository).update(categoryWithId(java(), 1L));
     }
 
     private void addCategoryWithInvalidName(final String name) {
