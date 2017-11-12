@@ -14,6 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.util.List;
+
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -84,4 +86,23 @@ public class CategoryRepositoryUTest {
         final Category categoryAfterUpdate = categoryRepository.findById(categoryAddedId);
         assertThat(categoryAfterUpdate.getName(), is(equalTo(cleanCode().getName())));
     }
+
+    @Test
+    public void findAllCategories() {
+        dBCommandTransactionalExecutor.executeCommand(() -> {
+            for (final Category category : allCategories()) {
+                categoryRepository.add(category);
+            }
+            return null;
+        });
+
+        final List<Category> categories = categoryRepository.findAll("name");
+        assertThat(categories.size(), is(equalTo(4)));
+        assertThat(categories.get(0).getName(), is(equalTo(architecture().getName())));
+        assertThat(categories.get(1).getName(), is(equalTo(cleanCode().getName())));
+        assertThat(categories.get(2).getName(), is(equalTo(java().getName())));
+        assertThat(categories.get(3).getName(), is(equalTo(networks().getName())));
+    }
+
+
 }

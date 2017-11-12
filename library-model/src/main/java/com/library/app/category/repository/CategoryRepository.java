@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 
 import com.library.app.category.model.Category;
 
+import java.util.List;
+
 public class CategoryRepository {
 
     EntityManager em;
@@ -22,5 +24,10 @@ public class CategoryRepository {
 
     public void update(final Category category) {
         em.merge(category);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Category> findAll(final String orderField) {
+        return em.createQuery("Select e From Category e Order by e." + orderField).getResultList();
     }
 }
