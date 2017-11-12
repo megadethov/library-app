@@ -117,6 +117,13 @@ public class CategoryServicesUTest {
         assertThat(category.getName(), is(equalTo(java().getName())));
     }
 
+    @Test(expected = CategoryNotFoundException.class)
+    public void findCategoryByIdNotFound() {
+        when(categoryRepository.findById(1L)).thenReturn(null);
+
+        categoryServices.findById(1L);
+    }
+
     private void addCategoryWithInvalidName(final String name) {
         try {
             categoryServices.add(new Category(name));
