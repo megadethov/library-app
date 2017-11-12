@@ -4,6 +4,8 @@ import static com.library.app.commontests.category.CategoryForTestsRepository.*;
 import static org.hamcrest.CoreMatchers.*;
 
 import com.library.app.category.model.Category;
+import com.library.app.commontests.utils.DBCommand;
+import com.library.app.commontests.utils.DBCommandTransactionalExecutor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +22,7 @@ public class CategoryRepositoryUTest {
     private EntityManagerFactory emf;
     private EntityManager em;
     private CategoryRepository categoryRepository;
+    private DBCommandTransactionalExecutor dbCommandTransactionalExecutor;
 
     @Before
     public void initTestCase() {
@@ -28,6 +31,8 @@ public class CategoryRepositoryUTest {
 
         categoryRepository = new CategoryRepository();
         categoryRepository.em = em;
+
+        dbCommandTransactionalExecutor = new DBCommandTransactionalExecutor(em);
     }
 
     @After
@@ -38,18 +43,15 @@ public class CategoryRepositoryUTest {
 
     @Test
     public void addCategoryAndFindIt() {
-        Long categoryAddedId = null;
-        try {
-            em.getTransaction().begin();
-            categoryAddedId = categoryRepository.add(java()).getId();
-            assertThat(categoryAddedId, is(notNullValue()));
-            em.getTransaction().commit();
-            em.clear();
-        } catch (final Exception e) {
-            fail("This exception should not have been thrown");
-            e.printStackTrace();
-            em.getTransaction().rollback();
-        }
+        Long categoryAddedId = dbCommandTransactionalExecutor.executeCommand(new DBCommand<Long>() {
+            @Override
+            public Long execute() {
+                return categoryRepository.add(java()).getId();
+            }
+        });
+
+        assertThat(categoryAddedId, is(notNullValue()));
+
         final Category category = categoryRepository.findById(categoryAddedId);
         assertThat(category, is(notNullValue()));
         assertThat(category.getName(), is(equalTo(java().getName())));
